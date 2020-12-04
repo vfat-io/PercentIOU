@@ -1,8 +1,6 @@
 # PercentIOU
 
-This repo contains everything to produce a snapshot of pre-hack DAI equivalent in pDAI Jar.
-
-For a technical writeup of the hack, refer to [banteg/evil-jar](https://github.com/banteg/evil-jar) repo.
+A fork of [banteg/cornichon](https://github.com/banteg/cornichonr) modified for Percent.
 
 ## Mainnet deployment
 
