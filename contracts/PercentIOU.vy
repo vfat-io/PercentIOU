@@ -13,9 +13,9 @@ event Approval:
     spender: indexed(address)
     value: uint256
 
-event Pickled:
+event Percented:
     receiver: indexed(address)
-    corn: uint256
+    piou: uint256
     dai: uint256
 
 struct Permit:
@@ -127,7 +127,7 @@ def _burn(sender: address, source: address, amount: uint256):
     assert source != ZERO_ADDRESS
     redeemed: uint256 = self._rate(amount)
     self.dai.transfer(source, redeemed)
-    log Pickled(source, amount, redeemed)
+    log Percented(source, amount, redeemed)
     self.total_supply -= amount
     self.balanceOf[source] -= amount
     if source != sender and self.allowances[source][sender] != MAX_UINT256:
@@ -139,7 +139,7 @@ def _burn(sender: address, source: address, amount: uint256):
 @external
 def burn(_amount: uint256 = MAX_UINT256):
     """
-    Burn CORN for DAI at a rate of (DAI in contract / CORN supply)
+    Burn PIOU for DAI at a rate of (DAI in contract / PIOU supply)
     """
     amount: uint256 = min(_amount, self.balanceOf[msg.sender])
     self._burn(msg.sender, msg.sender, amount)

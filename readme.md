@@ -1,4 +1,4 @@
-# ![logo](assets/logo.svg) Cornichon
+# ![logo](assets/logo.svg) PercentIOU
 
 This repo contains everything to produce a snapshot of pre-hack DAI equivalent in pDAI Jar.
 
@@ -6,9 +6,9 @@ For a technical writeup of the hack, refer to [banteg/evil-jar](https://github.c
 
 ## Mainnet deployment
 
-MerkleDistributor deployed at: [0x8896C47Cf854644cDC4Dd949a11048a57bDBA9Bc](https://etherscan.io/address/0x8896c47cf854644cdc4dd949a11048a57bdba9bc#code)
+MerkleDistributor deployed at: [0xA742Ce2E4426290017ab165b0F7d8Ab131E4a9f5](https://etherscan.io/address/0xA742Ce2E4426290017ab165b0F7d8Ab131E4a9f5#code)
 
-Cornichon deployed at: [0xa456b515303B2Ce344E9d2601f91270f8c2Fea5E](https://etherscan.io/address/0xa456b515303B2Ce344E9d2601f91270f8c2Fea5E#code)
+PercentIOU deployed at: [0x4De840147DB6d0655917f43dA8a2e86c26AaFB0a](https://etherscan.io/address/0x4De840147DB6d0655917f43dA8a2e86c26AaFB0a#code)
 
 ## Deploy
 
@@ -26,7 +26,7 @@ brownie accounts import alias keystore.json
 brownie run claim --network mainnet
 ```
 
-To burn CORN for DAI:
+To burn PIOU for DAI:
 ```
 brownie run claim burn --network mainnet
 ```

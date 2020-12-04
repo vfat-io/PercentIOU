@@ -1,8 +1,8 @@
 from brownie import Wei
 
 
-def test_dai_amount(distributor, tree, cornichon):
-    assert cornichon.balanceOf(distributor) == tree["tokenTotal"]
+def test_dai_amount(distributor, tree, percentIOU):
+    assert percentIOU.balanceOf(distributor) == tree["tokenTotal"]
 
 
 def test_tree_total(tree):

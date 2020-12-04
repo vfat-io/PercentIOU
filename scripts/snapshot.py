@@ -11,19 +11,8 @@ from eth_abi.packed import encode_abi_packed
 from eth_utils import encode_hex
 from tqdm import trange
 
-snapshot_block = 11303122  # one block before exploit https://ethtx.info/mainnet/0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0
-pdai = interface.PickleJar("0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87")
-chef = interface.PickleChef("0xbD17B1ce622d73bD438b9E658acA5996dc394b0d")
-pool_id = 16
-pdai_deploy = 11044218  # https://etherscan.io/tx/0xc1ba30bd850ebd12213a61c4c2b58619ea0200a8293bace4148881fbe49cccc8
-multicall = interface.Multicall("0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441")
-ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
-
-
 def main():
-    in_jar = pdai_balances()
-    in_chef = chef_balances(in_jar)
-    balances = merge_balances(in_jar, in_chef)
+    balances = iou_balances()
     distribution = prepare_merkle_tree(balances)
     print("recipients:", len(balances))
     print("total supply:", sum(balances.values()) / 1e18)
@@ -53,33 +42,12 @@ def cached(path):
     return decorator
 
 
-@cached("snapshot/01-pdai.json")
-def pdai_balances():
-    balances = transfers_to_balances(pdai, pdai_deploy, snapshot_block)
-    balances.pop(str(chef))
-    return balances
+@cached("snapshot/01-iou.json")
+def iou_balances():
+    return []
 
 
-@cached("snapshot/02-chef.json")
-def chef_balances(balances):
-    calls = [(chef, chef.userInfo.encode_input(pool_id, user)) for user in balances]
-    _, results = multicall.aggregate.call(calls, block_identifier=snapshot_block)
-    data = {
-        user: chef.userInfo.decode_output(data)[0]
-        for user, data in zip(balances, results)
-    }
-    return dict(Counter(data).most_common())
-
-
-@cached("snapshot/03-dai.json")
-def merge_balances(in_jar, in_chef):
-    data = Counter(in_jar) + Counter(in_chef)
-    ratio = Fraction(pdai.getRatio(block_identifier=snapshot_block), 10 ** 18)
-    data = {user: int(balance * ratio) for user, balance in data.items()}
-    return dict(Counter(data).most_common())
-
-
-@cached("snapshot/04-merkle.json")
+@cached("snapshot/02-merkle.json")
 def prepare_merkle_tree(balances):
     elements = [
         (index, account, amount)
@@ -103,23 +71,6 @@ def prepare_merkle_tree(balances):
         },
     }
     return distribution
-
-
-def transfers_to_balances(contract, deploy_block, snapshot_block):
-    balances = Counter()
-    contract = web3.eth.contract(str(contract), abi=contract.abi)
-    step = 10000
-    for start in trange(deploy_block, snapshot_block, step):
-        end = min(start + step - 1, snapshot_block)
-        logs = contract.events.Transfer().getLogs(fromBlock=start, toBlock=end)
-        for log in logs:
-            if log["args"]["from"] != ZERO_ADDRESS:
-                balances[log["args"]["from"]] -= log["args"]["value"]
-            if log["args"]["to"] != ZERO_ADDRESS:
-                balances[log["args"]["to"]] += log["args"]["value"]
-
-    return dict(balances.most_common())
-
 
 class MerkleTree:
     def __init__(self, elements):

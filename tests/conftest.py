@@ -14,13 +14,13 @@ def deployer(accounts):
 
 
 @pytest.fixture(scope="module")
-def cornichon(Cornichon, tree, deployer):
-    return Cornichon.deploy("Cornichon", "CORN", tree["tokenTotal"], {"from": deployer})
+def percentIOU(PercentIOU, tree, deployer):
+    return PercentIOU.deploy("PercentIOU", "PIOU", tree["tokenTotal"], {"from": deployer})
 
 
 @pytest.fixture(scope="module")
 def tree():
-    with open("snapshot/04-merkle.json") as fp:
+    with open("snapshot/02-merkle.json") as fp:
         claim_data = json.load(fp)
     for value in claim_data["claims"].values():
         value["amount"] = int(value["amount"], 16)
@@ -29,10 +29,10 @@ def tree():
 
 
 @pytest.fixture(scope="module")
-def distributor(MerkleDistributor, tree, cornichon, deployer):
+def distributor(MerkleDistributor, tree, percentIOU, deployer):
     contract = MerkleDistributor.deploy(
-        cornichon, tree["merkleRoot"], {"from": deployer}
+        percentIOU, tree["merkleRoot"], {"from": deployer}
     )
-    cornichon.transfer(contract, tree["tokenTotal"])
+    percentIOU.transfer(contract, tree["tokenTotal"])
 
     return contract

@@ -5,10 +5,10 @@ from eth_utils import encode_hex
 from eth_account._utils.structured_data.hashing import hash_domain
 
 
-def test_permit(cornichon):
+def test_permit(percentIOU):
     owner = Account.create()
     spender = Account.create()
-    nonce = cornichon.nonces(owner.address)
+    nonce = percentIOU.nonces(owner.address)
     expiry = chain[-1].timestamp + 3600
     amount = 10 ** 21
     data = {
@@ -28,10 +28,10 @@ def test_permit(cornichon):
             ],
         },
         "domain": {
-            "name": cornichon.name(),
-            "version": cornichon.version(),
+            "name": percentIOU.name(),
+            "version": percentIOU.version(),
             "chainId": 1,
-            "verifyingContract": str(cornichon),
+            "verifyingContract": str(percentIOU),
         },
         "primaryType": "Permit",
         "message": {
@@ -44,9 +44,9 @@ def test_permit(cornichon):
     }
     message = encode_structured_data(data)
     signed = owner.sign_message(message)
-    assert encode_hex(hash_domain(data)) == cornichon.DOMAIN_SEPARATOR()
-    assert cornichon.allowance(owner.address, spender.address) == 0
-    cornichon.permit(
+    assert encode_hex(hash_domain(data)) == percentIOU.DOMAIN_SEPARATOR()
+    assert percentIOU.allowance(owner.address, spender.address) == 0
+    percentIOU.permit(
         owner.address, spender.address, amount, nonce, expiry, signed.signature
     )
-    assert cornichon.allowance(owner.address, spender.address) == amount
+    assert percentIOU.allowance(owner.address, spender.address) == amount

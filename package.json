@@ -1,0 +1,26 @@
+{
+  "name": "cornichon",
+  "version": "1.0.0",
+  "description": "This repo contains everything to produce a snapshot of pre-hack DAI equivalent in pDAI Jar.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/banteg/cornichon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/banteg/cornichon/issues"
+  },
+  "homepage": "https://github.com/banteg/cornichon#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.3.0"
+  }
+}
