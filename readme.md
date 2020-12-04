@@ -1,4 +1,4 @@
-# ![logo](assets/logo.svg) PercentIOU
+# PercentIOU
 
 This repo contains everything to produce a snapshot of pre-hack DAI equivalent in pDAI Jar.
 
